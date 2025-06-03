@@ -1,0 +1,1 @@
+<h2>Painel de Avisos</h2><p>Comunicados internos da empresa.</p>
