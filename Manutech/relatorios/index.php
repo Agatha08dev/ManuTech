@@ -1,1 +1,0 @@
-<h2>Relatórios</h2><p>Exportação para Excel, PDF, filtros por setor, tempo, etc.</p>

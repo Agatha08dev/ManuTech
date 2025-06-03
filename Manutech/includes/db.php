@@ -1,22 +1,21 @@
 <?php
-require_once 'includes/db.php'; // Conexão PDO
+$host = 'localhost';
+$db   = 'manutech';  
+$user = 'root';                      // usuário padrão Laragon
+$pass = '';                         // senha vazia padrão Laragon
+$charset = 'utf8mb4';
 
-$nome = "João Silva";
-$email = "joao@email.com";
-$senha = "senha123";
-$perfil = "colaborador";
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
-// Criar hash da senha
-$senha_hash = password_hash($senha, PASSWORD_DEFAULT);
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+];
 
-$sql = "INSERT INTO usuarios (nome, email, senha_hash, perfil) VALUES (:nome, :email, :senha_hash, :perfil)";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([
-    ':nome' => $nome,
-    ':email' => $email,
-    ':senha_hash' => $senha_hash,
-    ':perfil' => $perfil
-]);
-
-echo "Usuário criado!";
-?>
+try {
+    $pdo = new PDO($dsn, $user, $pass, $options);
+} catch (PDOException $e) {
+    echo "Erro na conexão: " . $e->getMessage();
+    exit;
+}

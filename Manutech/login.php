@@ -16,15 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute(['email' => $email]);
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($usuario && password_verify($senha, $usuario['senha_hash'])) {
-        // Login válido, salvar dados na sessão
-        $_SESSION['usuario_id'] = $usuario['id'];
-        $_SESSION['usuario_nome'] = $usuario['nome'];
-        $_SESSION['usuario_perfil'] = $usuario['perfil'];
-
-        // Redirecionar para o dashboard ou página inicial
-        header('Location: admin-dashboard.php');
-        exit;
+if ($usuario && password_verify($senha, $usuario['senha_hash'])) {
+    $_SESSION['usuario_id'] = $usuario['id'];
+    $_SESSION['usuario_nome'] = $usuario['nome'];
+    $_SESSION['usuario_perfil'] = $usuario['perfil'];
+    header('Location: index.php');  // redireciona para página inicial
+    exit;
     } else {
         header('Location: login.php?erro=Usuário ou senha inválidos');
         exit;
@@ -36,28 +33,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8" />
     <title>Login - MANUTECH</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<div class="login-container">
     <h2>Login</h2>
     <form method="POST" action="login.php">
-        <label>Email:</label><br />
-        <input type="email" name="email" required /><br /><br />
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
         
-        <label>Senha:</label><br />
-        <input type="password" name="senha" required /><br /><br />
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required>
         
         <button type="submit">Entrar</button>
     </form>
-    <?php
-    if (!empty($_GET['erro'])) {
-        echo "<p style='color:red'>" . htmlspecialchars($_GET['erro']) . "</p>";
-    }
-    ?>
+
+    <?php if (!empty($_GET['erro'])): ?>
+        <p class="erro"><?php echo htmlspecialchars($_GET['erro']); ?></p>
+    <?php endif; ?>
+</div>
+
 </body>
 </html>
-<?php
-session_start();      // inicia a sessão
-session_destroy();    // destrói todas as variáveis da sessão (logout)
-header('Location: login.php');  // redireciona para página de login
-exit;
-?>
